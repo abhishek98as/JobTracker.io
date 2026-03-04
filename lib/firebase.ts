@@ -20,7 +20,7 @@ let _auth: Auth | null = null;
 
 function getFirebaseApp(): FirebaseApp | null {
   if (typeof window === "undefined") return null;
-  if (!firebaseConfig.apiKey) return null;
+  if (!firebaseConfig.apiKey || !firebaseConfig.authDomain) return null;
   if (!_app) {
     _app = getApps().length ? getApp() : initializeApp(firebaseConfig);
   }

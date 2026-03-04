@@ -47,7 +47,7 @@ export function AuthButton() {
       const provider = new GoogleAuthProvider();
       const auth = getFirebaseAuth();
       if (!auth) {
-        throw new Error("Google sign-in is not configured. Add Firebase public env vars in Vercel.");
+        throw new Error("Firebase is not configured. Ensure all NEXT_PUBLIC_FIREBASE_* env vars are set in Vercel and redeploy.");
       }
 
       const result = await signInWithPopup(auth, provider);
