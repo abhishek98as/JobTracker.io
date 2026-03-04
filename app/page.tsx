@@ -10,7 +10,6 @@ import {
   Users
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AppLogo } from "@/components/layout/app-logo";
 
 const cards = [
   {
@@ -88,11 +87,6 @@ export default function HomePage({ searchParams }: HomePageProps) {
             Soft Brutalism workflow for job hunting: structured tracking, interview preparation, referrals, reminders,
             analytics, and outreach automation.
           </p>
-        </div>
-        <div className="flex items-center justify-start lg:justify-end">
-          <div className="logo-link rounded-[18px] border-2 border-slate-900 bg-white p-4 shadow-[6px_6px_0_rgb(15_23_42)]">
-            <AppLogo size="lg" showTagline />
-          </div>
         </div>
       </div>
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
