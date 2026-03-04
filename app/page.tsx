@@ -63,9 +63,24 @@ const cards = [
   }
 ];
 
-export default function HomePage() {
+type HomePageProps = {
+  searchParams?: {
+    auth?: string;
+    next?: string;
+  };
+};
+
+export default function HomePage({ searchParams }: HomePageProps) {
+  const authRequired = searchParams?.auth === "required";
+  const nextPath = searchParams?.next || "/dashboard";
+
   return (
     <section className="space-y-8">
+      {authRequired ? (
+        <div className="rounded-[14px] border-2 border-amber-700 bg-amber-100 px-4 py-3 text-sm font-semibold text-amber-900">
+          Sign in with Google to access <span className="metric-mono">{nextPath}</span>.
+        </div>
+      ) : null}
       <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
         <div className="space-y-3">
           <h1 className="font-heading text-5xl font-bold tracking-tight text-slate-900">Your Job Hunt, Brutally Clear</h1>

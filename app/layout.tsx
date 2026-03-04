@@ -26,12 +26,9 @@ export const metadata: Metadata = {
   title: "JobTrackr",
   description: "Track applications, improve ATS score, and automate cold emails.",
   icons: {
-    icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/icon", type: "image/svg+xml" }
-    ],
-    shortcut: ["/icon.svg"],
-    apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }]
+    icon: [{ url: "/icon", type: "image/png" }],
+    shortcut: ["/icon"],
+    apple: [{ url: "/apple-icon", type: "image/png" }]
   },
   manifest: "/manifest.webmanifest"
 };

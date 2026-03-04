@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-import { firebaseAuth } from "@/lib/firebase";
+import { getFirebaseAuth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 
 type SessionUser = {
@@ -17,6 +17,7 @@ export function AuthButton() {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [working, setWorking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     void loadUser();
@@ -25,6 +26,7 @@ export function AuthButton() {
   async function loadUser() {
     try {
       setLoading(true);
+      setError(null);
       const response = await fetch("/api/auth/firebase/session", { cache: "no-store" });
       if (!response.ok) {
         setUser(null);
@@ -41,8 +43,14 @@ export function AuthButton() {
   async function handleSignIn() {
     try {
       setWorking(true);
+      setError(null);
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(firebaseAuth, provider);
+      const auth = getFirebaseAuth();
+      if (!auth) {
+        throw new Error("Google sign-in is not configured. Add Firebase public env vars in Vercel.");
+      }
+
+      const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
 
       const response = await fetch("/api/auth/firebase/session", {
@@ -60,8 +68,8 @@ export function AuthButton() {
       const data = await response.json();
       setUser(data.user ?? null);
       window.location.reload();
-    } catch {
-      // no-op UI for now
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Failed to sign in.");
     } finally {
       setWorking(false);
     }
@@ -70,12 +78,18 @@ export function AuthButton() {
   async function handleSignOut() {
     try {
       setWorking(true);
-      await signOut(firebaseAuth).catch(() => null);
+      setError(null);
+      const auth = getFirebaseAuth();
+      if (auth) {
+        await signOut(auth).catch(() => null);
+      }
       await fetch("/api/auth/firebase/session", {
         method: "DELETE"
       });
       setUser(null);
       window.location.href = "/";
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Failed to sign out.");
     } finally {
       setWorking(false);
     }
@@ -87,20 +101,26 @@ export function AuthButton() {
 
   if (!user) {
     return (
-      <Button onClick={handleSignIn} disabled={working}>
-        {working ? "Signing in..." : "Sign in with Google"}
-      </Button>
+      <div className="flex flex-col items-end gap-1">
+        <Button onClick={handleSignIn} disabled={working}>
+          {working ? "Signing in..." : "Sign in with Google"}
+        </Button>
+        {error ? <p className="max-w-[280px] text-right text-xs text-red-700">{error}</p> : null}
+      </div>
     );
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <Link href="/tracker" className="hidden text-sm font-medium text-slate-700 md:inline">
-        {user.name ?? user.email}
-      </Link>
-      <Button variant="outline" onClick={handleSignOut} disabled={working}>
-        {working ? "Signing out..." : "Logout"}
-      </Button>
+    <div className="flex flex-col items-end gap-1">
+      <div className="flex items-center gap-3">
+        <Link href="/tracker" className="hidden text-sm font-medium text-slate-700 md:inline">
+          {user.name ?? user.email}
+        </Link>
+        <Button variant="outline" onClick={handleSignOut} disabled={working}>
+          {working ? "Signing out..." : "Logout"}
+        </Button>
+      </div>
+      {error ? <p className="max-w-[280px] text-right text-xs text-red-700">{error}</p> : null}
     </div>
   );
 }

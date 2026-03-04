@@ -18,9 +18,11 @@ type Props = {
 export function MainNav({ items }: Props) {
   const pathname = usePathname();
   const [badgeCount, setBadgeCount] = useState(0);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
     let cancelled = false;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
 
     async function loadBadge() {
       try {
@@ -41,11 +43,51 @@ export function MainNav({ items }: Props) {
       }
     }
 
-    void loadBadge();
-    const interval = setInterval(() => void loadBadge(), 45_000);
+    async function bootstrap() {
+      try {
+        const response = await fetch("/api/auth/firebase/session", {
+          cache: "no-store"
+        });
+
+        if (!response.ok) {
+          if (!cancelled) {
+            setIsAuthenticated(false);
+            setBadgeCount(0);
+          }
+          return;
+        }
+
+        const data = await response.json();
+        const authed = Boolean(data.user);
+
+        if (!cancelled) {
+          setIsAuthenticated(authed);
+        }
+
+        if (!authed) {
+          if (!cancelled) {
+            setBadgeCount(0);
+          }
+          return;
+        }
+
+        await loadBadge();
+        intervalId = setInterval(() => void loadBadge(), 45_000);
+      } catch {
+        if (!cancelled) {
+          setIsAuthenticated(false);
+          setBadgeCount(0);
+        }
+      }
+    }
+
+    void bootstrap();
+
     return () => {
       cancelled = true;
-      clearInterval(interval);
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
     };
   }, []);
 
@@ -64,7 +106,9 @@ export function MainNav({ items }: Props) {
             )}
           >
             <span>{item.label}</span>
-            {item.showReminderBadge && badgeCount > 0 ? <span className="brutal-reminder-pill">{badgeCount}</span> : null}
+            {item.showReminderBadge && isAuthenticated && badgeCount > 0 ? (
+              <span className="brutal-reminder-pill">{badgeCount}</span>
+            ) : null}
           </Link>
         );
       })}
