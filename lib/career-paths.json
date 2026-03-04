@@ -1,0 +1,59 @@
+{
+  "roles": [
+    {
+      "name": "Frontend Developer",
+      "summary": "Builds responsive web interfaces and improves UX performance.",
+      "requiredSkills": ["html", "css", "javascript", "react", "typescript"],
+      "learningPath": [
+        "Master semantic HTML and modern CSS",
+        "Build 3 React/Next.js projects",
+        "Learn state management and API integration",
+        "Practice accessibility and performance audits"
+      ]
+    },
+    {
+      "name": "Backend Developer",
+      "summary": "Designs APIs, databases, and server-side business logic.",
+      "requiredSkills": ["python", "node", "sql", "api", "database"],
+      "learningPath": [
+        "Learn REST and authentication patterns",
+        "Design schemas and write optimized SQL queries",
+        "Implement background jobs and caching",
+        "Deploy backend services to cloud"
+      ]
+    },
+    {
+      "name": "Data Analyst",
+      "summary": "Turns raw data into business insights and dashboards.",
+      "requiredSkills": ["sql", "excel", "python", "statistics", "visualization"],
+      "learningPath": [
+        "Strengthen SQL fundamentals",
+        "Use Python notebooks for analysis",
+        "Build dashboards in Power BI/Tableau",
+        "Practice data storytelling"
+      ]
+    },
+    {
+      "name": "QA Engineer",
+      "summary": "Ensures product quality through manual and automation testing.",
+      "requiredSkills": ["testing", "selenium", "api", "bug", "automation"],
+      "learningPath": [
+        "Learn test case design and bug reporting",
+        "Automate UI/API test flows",
+        "Set up CI test execution",
+        "Track quality metrics"
+      ]
+    },
+    {
+      "name": "Business Analyst",
+      "summary": "Bridges business requirements and engineering delivery.",
+      "requiredSkills": ["communication", "sql", "analysis", "documentation", "stakeholder"],
+      "learningPath": [
+        "Practice requirement elicitation",
+        "Write clear BRDs and user stories",
+        "Learn SQL for validation",
+        "Develop stakeholder communication playbooks"
+      ]
+    }
+  ]
+}

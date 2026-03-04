@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 42 33% 97%;
+  --foreground: 228 15% 14%;
+  --card: 0 0% 100%;
+  --card-foreground: 228 15% 14%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 228 15% 14%;
+  --primary: 221 83% 53%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 228 20% 95%;
+  --secondary-foreground: 228 16% 22%;
+  --muted: 228 18% 93%;
+  --muted-foreground: 228 11% 38%;
+  --accent: 24 95% 53%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 228 14% 22%;
+  --input: 228 14% 22%;
+  --ring: 221 83% 53%;
+  --radius: 0.875rem;
+}
+
+* {
+  @apply border-border;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  @apply bg-background text-foreground;
+  font-family: var(--font-inter), sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+.metric-mono {
+  font-family: var(--font-jetbrains-mono), monospace;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.brutal-card {
+  @apply rounded-[14px] border-2 border-slate-900 bg-white;
+  box-shadow: 4px 4px 0 rgb(15 23 42 / 0.95);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.brutal-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 rgb(15 23 42 / 0.95);
+}
+
+.brutal-nav-pill {
+  @apply inline-flex items-center gap-2 rounded-xl border-2 border-slate-900 px-3 py-2 text-xs font-semibold tracking-wide;
+  box-shadow: 2px 2px 0 rgb(15 23 42 / 0.95);
+  transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+}
+
+.brutal-nav-pill:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 rgb(15 23 42 / 0.95);
+}
+
+.brutal-reminder-pill {
+  @apply inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white;
+}
+
+.status-chip {
+  @apply inline-flex items-center rounded-full border-2 border-slate-900 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide;
+}
+
+.timeline-day-chip {
+  @apply inline-flex rounded-lg border-2 border-slate-900 bg-slate-900 px-2.5 py-1 text-xs font-semibold text-white;
+}
+
+.page-subtle {
+  @apply text-sm text-slate-600;
+}
+
+.logo-link {
+  @apply inline-flex items-center;
+}
+
+.logo-shell {
+  border: 2px solid rgb(15 23 42);
+  border-radius: 16px;
+  background: #fffdf7;
+  box-shadow: 4px 4px 0 rgb(15 23 42 / 0.95);
+  transition: transform 250ms ease, box-shadow 250ms ease;
+}
+
+.logo-mark {
+  transition: transform 260ms ease;
+}
+
+.logo-wordmark {
+  transition: letter-spacing 250ms ease, transform 250ms ease;
+}
+
+.logo-tag {
+  transition: color 250ms ease;
+}
+
+.logo-link:hover .logo-shell {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 rgb(15 23 42 / 0.95);
+}
+
+.logo-link:hover .logo-mark {
+  transform: rotate(-2deg) scale(1.03);
+}
+
+.logo-link:hover .logo-wordmark {
+  letter-spacing: 0.02em;
+  transform: translateX(1px);
+}
+
+.logo-link:hover .logo-tag {
+  color: rgb(30 64 175);
+}

@@ -1,0 +1,261 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  name           String?
+  email          String          @unique
+  emailVerified  DateTime?
+  image          String?
+  applications   Application[]
+  emailTemplates EmailTemplate[]
+  campaigns      EmailCampaign[]
+  resumes        ResumeAsset[]
+  referrals      ReferralContact[]
+  weeklyGoals    WeeklyGoal[]
+  activityEvents ActivityEvent[]
+  accounts       Account[]
+  sessions       Session[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model Application {
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String           @db.ObjectId
+  user               User             @relation(fields: [userId], references: [id])
+  company            String
+  role               String
+  jobUrl             String?
+  platform           String
+  status             String           @default("wishlist")
+  salary             String?
+  contactName        String?
+  contactEmail       String?
+  notes              String?
+  appliedAt          DateTime?
+  resumeAssetId      String?          @db.ObjectId
+  referralContactId  String?          @db.ObjectId
+  customReminderAt   DateTime?
+  customReminderNote String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  resume         ResumeAsset?     @relation(fields: [resumeAssetId], references: [id])
+  referral       ReferralContact? @relation(fields: [referralContactId], references: [id])
+  statusHistory  StatusChange[]
+  interviews     InterviewRound[]
+  research       CompanyResearch?
+  activityEvents ActivityEvent[]
+
+  @@index([userId, status])
+  @@index([userId, platform])
+  @@index([userId, platform, status, createdAt])
+  @@index([resumeAssetId])
+  @@index([referralContactId])
+}
+
+model StatusChange {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  applicationId String      @db.ObjectId
+  application   Application @relation(fields: [applicationId], references: [id])
+  fromStatus    String
+  toStatus      String
+  changedAt     DateTime    @default(now())
+
+  @@index([applicationId])
+}
+
+model ResumeAsset {
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String        @db.ObjectId
+  user       User          @relation(fields: [userId], references: [id])
+  label      String
+  roleTag    String?
+  fileName   String
+  mimeType   String
+  fileSize   Int
+  blobUrl    String
+  blobPath   String
+  isActive   Boolean       @default(true)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  applications Application[]
+
+  @@index([userId, createdAt])
+}
+
+model ReferralContact {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String        @db.ObjectId
+  user        User          @relation(fields: [userId], references: [id])
+  name        String
+  email       String?
+  phone       String?
+  linkedinUrl String?
+  notes       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  applications Application[]
+
+  @@index([userId, email])
+}
+
+model InterviewRound {
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  applicationId   String      @db.ObjectId
+  application     Application @relation(fields: [applicationId], references: [id])
+  roundType       String
+  interviewerName String?
+  scheduledAt     DateTime?
+  questionsAsked  String?
+  answersGiven    String?
+  outcome         String?
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([applicationId, createdAt])
+}
+
+model CompanyResearch {
+  id                String      @id @default(auto()) @map("_id") @db.ObjectId
+  applicationId     String      @unique @db.ObjectId
+  application       Application @relation(fields: [applicationId], references: [id])
+  companySize       String?
+  industry          String?
+  techStack         String?
+  glassdoorRating   String?
+  cultureNotes      String?
+  interviewInsights String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}
+
+model WeeklyGoal {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String   @db.ObjectId
+  user               User     @relation(fields: [userId], references: [id])
+  weekStartDate      DateTime
+  targetApplications Int
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@unique([userId, weekStartDate])
+}
+
+model ActivityEvent {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String       @db.ObjectId
+  user          User         @relation(fields: [userId], references: [id])
+  applicationId String?      @db.ObjectId
+  application   Application? @relation(fields: [applicationId], references: [id])
+  eventType     String
+  title         String
+  description   String?
+  occurredAt    DateTime
+  metaJson      String?
+  createdAt     DateTime     @default(now())
+
+  @@index([userId, occurredAt])
+  @@index([applicationId])
+}
+
+model EmailTemplate {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  subject   String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  campaigns EmailCampaign[]
+
+  @@index([userId])
+}
+
+model EmailCampaign {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String         @db.ObjectId
+  user            User           @relation(fields: [userId], references: [id])
+  templateId      String?        @db.ObjectId
+  template        EmailTemplate? @relation(fields: [templateId], references: [id])
+  status          String         @default("queued")
+  totalRecipients Int
+  processed       Int            @default(0)
+  successCount    Int            @default(0)
+  failureCount    Int            @default(0)
+  startedAt       DateTime?
+  finishedAt      DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  sends EmailSendLog[]
+
+  @@index([userId, status])
+}
+
+model EmailSendLog {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  campaignId   String       @db.ObjectId
+  campaign     EmailCampaign @relation(fields: [campaignId], references: [id])
+  companyName  String
+  hrEmail      String
+  hrName       String?
+  jobTitle     String
+  jobUrl       String?
+  renderedBody String
+  renderedSubj String
+  status       String       @default("queued")
+  errorMessage String?
+  sentAt       DateTime?
+  createdAt    DateTime     @default(now())
+
+  @@index([campaignId, status])
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

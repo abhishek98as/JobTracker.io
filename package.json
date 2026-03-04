@@ -1,0 +1,49 @@
+{
+  "name": "jobtrackr",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "echo \"MongoDB uses prisma db push; migrations are not supported by Prisma migrate\"",
+    "prisma:push": "prisma db push"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^2.7.2",
+    "@hello-pangea/dnd": "^18.0.1",
+    "@prisma/client": "^5.22.0",
+    "@vercel/blob": "^0.27.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "firebase": "^11.10.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.2",
+    "lucide-react": "^0.468.0",
+    "next": "14.2.15",
+    "next-auth": "^4.24.10",
+    "nodemailer": "^7.0.7",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "recharts": "^2.15.0",
+    "tailwind-merge": "^2.5.5",
+    "xlsx": "^0.18.5",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/nodemailer": "^6.4.16",
+    "@types/react": "^18.3.14",
+    "@types/react-dom": "^18.3.3",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.15",
+    "postcss": "^8.4.49",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.7.2"
+  }
+}
